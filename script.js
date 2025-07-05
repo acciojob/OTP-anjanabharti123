@@ -1,27 +1,33 @@
-const inputs = document.querySelectorAll(".code");
+function moveFocus(index) {
+    const input = document.getElementById(`otp-${index}`);
+    const value = input.value;
 
-inputs.forEach((input, index) => {
-    input.addEventListener("input", (e) => {
-        const value = e.target.value;
-        if (!/^\d$/.test(value)) {
-            e.target.value = ""; // allow only digits
-            return;
-        }
+    if (!/^\d$/.test(value)) {
+        input.value = ''; // Only allow digits
+        return;
+    }
 
-        if (value && index < inputs.length - 1) {
-            inputs[index + 1].focus();
-        }
-    });
+    if (index < 6) {
+        const nextInput = document.getElementById(`otp-${index + 1}`);
+        nextInput.focus();
+    }
+}
 
-    input.addEventListener("keydown", (e) => {
-        if (e.key === "Backspace") {
-            if (e.target.value === "") {
-                if (index > 0) {
-                    inputs[index - 1].focus();
-                }
-            } else {
-                e.target.value = "";
+function moveFocusBack(event, index) {
+    const input = document.getElementById(`otp-${index}`);
+
+    if (event.key === "Backspace") {
+        if (input.value === '') {
+            if (index > 1) {
+                const prevInput = document.getElementById(`otp-${index - 1}`);
+                prevInput.focus();
+                prevInput.value = ''; // Also delete the value in the previous field
             }
+        } else {
+            input.value = '';
         }
-    });
-});
+
+        // Prevent default backspace behavior (like navigating away)
+        event.preventDefault();
+    }
+}
